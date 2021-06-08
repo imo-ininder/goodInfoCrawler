@@ -39,12 +39,14 @@ stock_number = [
         8481,8482,8488,8497,8499,8926,8940,8996,9802,9902,9904,9905,9906,9907,9908,9910,9911,9912,9914,9917,9918,9919,9921,9924,9925,9926,9927,9929,9930,
         9931,9933,9934,9935,9937,9938,9939,9940,9941,9942,9943,9944,9945,9946,9955,9958]
 
-stock_number.each do |stock|        
-        RestClient::Request.new({
-            method: :post,
-            url: 'https://goodinfo.tw/StockInfo/StockFinDetail.asp?STEP=DATA&STOCK_ID='+stock.to_s+'&RPT_CAT=BS_M_YEAR&QRY_TIME=2019',
-            headers: {'origin': 'https://goodinfo.tw', 'sec-fetch-site': 'same-origin', 'referer': 'https://goodinfo.tw/StockInfo/StockFinDetail.asp?RPT_CAT=BS_M_YEAR&STOCK_ID='+stock.to_s, 'content-type': 'application/x-www-form-urlencoded;' , 'user-agent': 'Chrome/65.0.3325.181'}
-        }).execute do | response, request, result | 
+stock_number.each do |stock| 
+
+         response = RestClient.post('https://goodinfo.tw/StockInfo/StockFinDetail.asp?STEP=DATA&STOCK_ID='+stock.to_s+'&RPT_CAT=BS_M_YEAR&QRY_TIME=2019',
+            "",
+            {'origin': 'https://goodinfo.tw', 'sec-fetch-site': 'same-origin', 'referer': 'https://goodinfo.tw/StockInfo/StockFinDetail.asp?RPT_CAT=BS_M_YEAR&STOCK_ID='+stock.to_s, 'content-type': 'application/x-www-form-urlencoded;' , 'user-agent': 'Chrome/65.0.3325.181'}
+            )
+
+        
             html = Nokogiri::HTML(response.body)
             total_asset_2019 = ""
             total_asset_2018 = ""
@@ -92,7 +94,7 @@ stock_number.each do |stock|
                 write_to_file(message, "fail_list.txt")
             end
             sleep(20)
-    end
+    
 end
 
   
